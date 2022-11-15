@@ -181,15 +181,19 @@ try:
             list_pvp = []
             
         logging.info("is_100..." + str(IS_100))
-        logging.info("list_100:" + str(list_100))
+        logging.info("list_100_len:" + str(len(list_100)))
         logging.info("is_pvp..." + str(IS_PVP))
-        logging.info("list_pvp:" + str(list_pvp))
+        logging.info("list_pvp_len:" + str(len(list_pvp)))
         list_all = list_100 + list_pvp
         
         # save_screenshot(instance.driver, "/tmp/%s.png" % str(this_time))
-        
+        processing_list_100 = True
         time.sleep(5)
-        for _l in list_all:
+        for i in range(len(list_all)):
+            if i >= len(list_100):
+               processing_list_100 = False
+            
+            _l = list_all[i]
             img_name = "img/" + _l[1].split("/")[-1]
 
             # 判斷圖片是否存在，不存在則寫入
@@ -232,10 +236,13 @@ try:
                         is_in_track_pvp_list = True
                         msg += "\n" + pvp_info[1] + " " + pvp_info[0]
                 else:
-                    is_in_track_pvp_list = True
-                    msg = "\n這隻100!!!" + msg
+                    if processing_list_100:
+                        is_in_track_pvp_list = True
+                        msg = "\n這隻100!!!" + msg
 
                 if is_in_track_pvp_list:
+                    logging.info(msg)
+
                     # print(msg)
                     if pminfo[0] in name_to_id_json:
                         img_name = "img/" + name_to_id_json[pminfo[0]] + ".png"
